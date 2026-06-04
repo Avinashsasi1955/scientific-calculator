@@ -1023,7 +1023,9 @@ body {
     .memory-grid {
         gap: 4px;
     }
-    
+    .standard-grid {
+        gap: 5px;
+    }
     .scientific-grid {
         grid-template-columns: repeat(4, 1fr); /* 4 columns on very small screen */
         gap: 4px;
