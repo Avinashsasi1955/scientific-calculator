@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quantum Calc - A premium, high-precision scientific calculator with glassmorphic design and real-time evaluation.">
+    <title>Scientific Calculator - High-Precision Scientific Calculator</title>
+    <!-- Google Fonts: Outfit for UI, Fira Code for calculation displays -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Math.js for Perfect High-Precision Mathematical Evaluation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Link to Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+    </div>
+
+    <main class="calculator-container" id="calculatorApp">
+        <!-- HEADER / TOP CONTROL BAR -->
+        <header class="calc-header">
+            <div class="logo">
+                <i class="fa-solid fa-atom pulse-icon"></i>
+                <span>Scientific Calculator</span>
+            </div>
+            <div class="header-controls">
+                <!-- Angle Mode Toggle (Deg/Rad) -->
+                <div class="toggle-container" id="angleModeToggle" title="Toggle between Degrees and Radians">
+                    <button class="toggle-btn active" id="btnRad" data-glossary="raddeg">RAD</button>
+                    <button class="toggle-btn" id="btnDeg" data-glossary="raddeg">DEG</button>
+                </div>
+                <!-- Keyboard/Sound click selector -->
+                <button class="icon-btn" id="soundToggle" title="Toggle Sound Feedback" data-glossary="sound">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <!-- History Toggle -->
+                <button class="icon-btn" id="historyToggle" title="View Calculation History" data-glossary="history">
+                    <i class="fa-solid fa-history"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- DISPLAY SCREEN -->
+        <section class="calc-display-section">
+            <div class="display-status-bar">
+                <span class="status-indicator" id="memoryIndicator" style="visibility: hidden;">[M]</span>
+                <span class="status-indicator" id="modeIndicator">RAD</span>
+                <span class="status-indicator" id="inputFormatIndicator">DEC</span>
+            </div>
+            <div class="display-expression-container">
+                <div class="expression-line" id="expressionDisplay" placeholder="0"></div>
+            </div>
+            <div class="display-result-container">
+                <div class="result-live-preview" id="livePreviewDisplay"></div>
+                <div class="result-line" id="resultDisplay">0</div>
+            </div>
+            <div class="display-action-bar">
+                <button class="display-action-btn" id="copyResultBtn" title="Copy result to clipboard" data-glossary="copy">
+                    <i class="fa-regular fa-copy"></i> Copy
+                </button>
+                <div class="precision-select-container">
+                    <label for="precisionSelect">Precision:</label>
+                    <select id="precisionSelect" data-glossary="precision">
+                        <option value="12" selected>12 Digits</option>
+                        <option value="8">8 Digits</option>
+                        <option value="4">4 Digits</option>
+                        <option value="16">16 Digits</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- THREE-COLUMN MAIN GRID -->
+        <section class="calculator-pads">
+            <!-- COLUMN 1: Basic Pad (Standard numbers & operations) -->
+            <div class="pad-left">
+                <!-- Memory Functions Row -->
+                <div class="btn-grid memory-grid">
+                    <button class="btn btn-mem" id="btnMC" data-glossary="mc">MC</button>
+                    <button class="btn btn-mem" id="btnMR" data-glossary="mr">MR</button>
+                    <button class="btn btn-mem" id="btnMPlus" data-glossary="mplus">M+</button>
+                    <button class="btn btn-mem" id="btnMMinus" data-glossary="mminus">M-</button>
+                    <button class="btn btn-mem" id="btnMS" data-glossary="ms">MS</button>
+                </div>
+
+                <!-- Number Pad & Standard Operations Grid -->
+                <div class="btn-grid standard-grid">
+                    <!-- Row 1 -->
+                    <button class="btn btn-danger" id="btnAC" data-glossary="ac">AC</button>
+                    <button class="btn btn-warning" id="btnBack" data-glossary="back"><i class="fa-solid fa-delete-left"></i></button>
+                    <button class="btn btn-bracket" id="btnOpenP" data-glossary="brackets">(</button>
+                    <button class="btn btn-bracket" id="btnCloseP" data-glossary="brackets">)</button>
+                    <button class="btn btn-op" id="btnDiv" data-glossary="divide">÷</button>
+                    
+                    <!-- Row 2 (Keyboard Order) -->
+                    <button class="btn btn-num" id="btn1" data-glossary="numbers">1</button>
+                    <button class="btn btn-num" id="btn2" data-glossary="numbers">2</button>
+                    <button class="btn btn-num" id="btn3" data-glossary="numbers">3</button>
+                    <button class="btn btn-op" id="btnMul" data-glossary="multiply">×</button>
+                    
+                    <!-- Row 3 -->
+                    <button class="btn btn-num" id="btn4" data-glossary="numbers">4</button>
+                    <button class="btn btn-num" id="btn5" data-glossary="numbers">5</button>
+                    <button class="btn btn-num" id="btn6" data-glossary="numbers">6</button>
+                    <button class="btn btn-op" id="btnSub" data-glossary="subtract">−</button>
+                    
+                    <!-- Row 4 -->
+                    <button class="btn btn-num" id="btn7" data-glossary="numbers">7</button>
+                    <button class="btn btn-num" id="btn8" data-glossary="numbers">8</button>
+                    <button class="btn btn-num" id="btn9" data-glossary="numbers">9</button>
+                    <button class="btn btn-op" id="btnAdd" data-glossary="add">+</button>
+                    
+                    <!-- Row 5 -->
+                    <button class="btn btn-num btn-double" id="btn0" data-glossary="numbers">0</button>
+                    <button class="btn btn-num" id="btnDot" data-glossary="decimal">.</button>
+                    <button class="btn btn-action" id="btnEquals" data-glossary="equals">=</button>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: Scientific Pad (Trig, Logs, Powers) -->
+            <div class="pad-right">
+                <div class="pad-right-header">
+                    <span class="pad-title"><i class="fa-solid fa-microscope"></i> Scientific Pad</span>
+                    <button class="btn btn-toggle-2nd" id="btnToggle2nd" data-glossary="second">
+                        2<sup>nd</sup>
+                    </button>
+                </div>
+
+                <div class="btn-grid scientific-grid">
+                    <!-- Row 1: Trigonometry -->
+                    <button class="btn btn-sci" id="btnSin" data-val="sin(" data-alt="asin(" data-glossary="sin">sin</button>
+                    <button class="btn btn-sci" id="btnCos" data-val="cos(" data-alt="acos(" data-glossary="cos">cos</button>
+                    <button class="btn btn-sci" id="btnTan" data-val="tan(" data-alt="atan(" data-glossary="tan">tan</button>
+
+                    <!-- Row 2: Hyperbolic -->
+                    <button class="btn btn-sci btn-sci-alt" id="btnSinh" data-val="sinh(" data-alt="asinh(" data-glossary="sinh">sinh</button>
+                    <button class="btn btn-sci btn-sci-alt" id="btnCosh" data-val="cosh(" data-alt="acosh(" data-glossary="cosh">cosh</button>
+                    <button class="btn btn-sci btn-sci-alt" id="btnTanh" data-val="tanh(" data-alt="atanh(" data-glossary="tanh">tanh</button>
+
+                    <!-- Row 3: Logarithms -->
+                    <button class="btn btn-sci" id="btnLn" data-val="log(" data-alt="exp(" data-glossary="ln">ln</button>
+                    <button class="btn btn-sci" id="btnLog" data-val="log10(" data-alt="2^" data-glossary="log">log</button>
+                    <button class="btn btn-sci" id="btnLog2" data-val="log2(" data-alt="log(" data-glossary="log2">log₂</button>
+
+                    <!-- Row 4: Powers & Roots -->
+                    <button class="btn btn-sci" id="btnSquare" data-val="^2" data-alt="^3" data-glossary="square">x²</button>
+                    <button class="btn btn-sci" id="btnPower" data-val="^" data-alt="nthRoot(" data-glossary="power">xʸ</button>
+                    <button class="btn btn-sci" id="btnSqrt" data-val="sqrt(" data-alt="cbrt(" data-glossary="sqrt">√</button>
+
+                    <!-- Row 5: Multipliers & Inverses -->
+                    <button class="btn btn-sci" id="btnExp" data-val="*10^" data-alt="exp(" data-glossary="exp">EXP</button>
+                    <button class="btn btn-sci" id="btn10x" data-val="10^" data-alt="exp(" data-glossary="pow10">10ˣ</button>
+                    <button class="btn btn-sci" id="btnInv" data-val="1/" data-alt="^-1" data-glossary="inv">1/x</button>
+                </div>
+            </div>
+
+            <!-- COLUMN 3: Operations Glossary (Complete - Hover Highlighted) -->
+            <div class="pad-glossary">
+                <div class="pad-glossary-header">
+                    <span class="pad-title"><i class="fa-solid fa-book-open"></i> Function Glossary</span>
+                </div>
+                <div class="glossary-list" id="glossaryList">
+                    <!-- Numbers & Decimals -->
+                    <div class="glossary-card" id="gloss-numbers">
+                        <span class="glossary-symbol">0 - 9</span>
+                        <span class="glossary-desc"><strong>Numeric Keys</strong>: Inserts integer digits into your expression.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-decimal">
+                        <span class="glossary-symbol">.</span>
+                        <span class="glossary-desc"><strong>Decimal Separator</strong>: Places a fractional point to build decimals.</span>
+                    </div>
+
+                    <!-- Arithmetic -->
+                    <div class="glossary-card" id="gloss-add">
+                        <span class="glossary-symbol">+</span>
+                        <span class="glossary-desc"><strong>Addition</strong>: Calculates the sum of preceding and succeeding values.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-subtract">
+                        <span class="glossary-symbol">−</span>
+                        <span class="glossary-desc"><strong>Subtraction</strong>: Evaluates difference between values.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-multiply">
+                        <span class="glossary-symbol">×</span>
+                        <span class="glossary-desc"><strong>Multiplication</strong>: Finds the scaling product of two expressions.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-divide">
+                        <span class="glossary-symbol">÷</span>
+                        <span class="glossary-desc"><strong>Division</strong>: Computes fraction quotient. Warns on division by 0.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-equals">
+                        <span class="glossary-symbol">=</span>
+                        <span class="glossary-desc"><strong>Evaluate</strong>: Processes mathematical expression, displays result and logs to history.</span>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="glossary-card" id="gloss-ac">
+                        <span class="glossary-symbol">AC</span>
+                        <span class="glossary-desc"><strong>All Clear</strong>: Resets calculator state, display result, and current formula.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-back">
+                        <span class="glossary-symbol">⌫</span>
+                        <span class="glossary-desc"><strong>Backspace</strong>: Safely deletes the last numeric character or function token.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-brackets">
+                        <span class="glossary-symbol">( )</span>
+                        <span class="glossary-desc"><strong>Parentheses</strong>: Organizes nested sub-equations and controls evaluation priority.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-second">
+                        <span class="glossary-symbol">2nd</span>
+                        <span class="glossary-desc"><strong>Shift / Secondary</strong>: Swaps primary keys for inverses (e.g. sin ➔ sin⁻¹, x² ➔ x³).</span>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="glossary-card" id="gloss-raddeg">
+                        <span class="glossary-symbol">RAD / DEG</span>
+                        <span class="glossary-desc"><strong>Angle Mode</strong>: Toggles standard trigonometry calculations between Radians & Degrees.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-sound">
+                        <span class="glossary-symbol"><i class="fa-solid fa-volume-high"></i></span>
+                        <span class="glossary-desc"><strong>Audio Toggle</strong>: Toggles Web Audio synthesized haptic key-click feedback on/off.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-history">
+                        <span class="glossary-symbol"><i class="fa-solid fa-history"></i></span>
+                        <span class="glossary-desc"><strong>Calculation Log</strong>: Toggles calculation drawer showing previous formulas and inputs.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-copy">
+                        <span class="glossary-symbol">Copy</span>
+                        <span class="glossary-desc"><strong>Copy Output</strong>: Copies the main result display contents to the computer clipboard.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-precision">
+                        <span class="glossary-symbol">Precision</span>
+                        <span class="glossary-desc"><strong>Decimal Rounding</strong>: Configures maximum output digits (4, 8, 12, or 16) to display.</span>
+                    </div>
+
+                    <!-- Memory -->
+                    <div class="glossary-card" id="gloss-mc">
+                        <span class="glossary-symbol">MC</span>
+                        <span class="glossary-desc"><strong>Memory Clear</strong>: Resets the stored value in internal memory back to 0.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-mr">
+                        <span class="glossary-symbol">MR</span>
+                        <span class="glossary-desc"><strong>Memory Recall</strong>: Retrieves stored memory value and appends it to the equation.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-mplus">
+                        <span class="glossary-symbol">M+</span>
+                        <span class="glossary-desc"><strong>Memory Add</strong>: Adds the current output display value directly to memory storage.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-mminus">
+                        <span class="glossary-symbol">M-</span>
+                        <span class="glossary-desc"><strong>Memory Subtract</strong>: Subtracts display value from stored memory value.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-ms">
+                        <span class="glossary-symbol">MS</span>
+                        <span class="glossary-desc"><strong>Memory Store</strong>: Directly saves current display output into memory storage.</span>
+                    </div>
+                    
+                    <!-- Trig -->
+                    <div class="glossary-card" id="gloss-sin">
+                        <span class="glossary-symbol">sin / sin⁻¹</span>
+                        <span class="glossary-desc"><strong>Sine / Arcsine</strong>: Standard or inverse trigonometric ratios of the angle.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-cos">
+                        <span class="glossary-symbol">cos / cos⁻¹</span>
+                        <span class="glossary-desc"><strong>Cosine / Arccosine</strong>: Horizontal ratio relative to unit circle.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-tan">
+                        <span class="glossary-symbol">tan / tan⁻¹</span>
+                        <span class="glossary-desc"><strong>Tangent / Arctangent</strong>: Slope ratio of opposite over adjacent side.</span>
+                    </div>
+                    
+                    <!-- Hyperbolics -->
+                    <div class="glossary-card" id="gloss-sinh">
+                        <span class="glossary-symbol">sinh</span>
+                        <span class="glossary-desc"><strong>Hyperbolic Sine</strong>: Calculates (e<sup>x</sup> − e<sup>−x</sup>) / 2 exponential curve.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-cosh">
+                        <span class="glossary-symbol">cosh</span>
+                        <span class="glossary-desc"><strong>Hyperbolic Cosine</strong>: Calculates (e<sup>x</sup> + e<sup>−x</sup>) / 2 catenary shape.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-tanh">
+                        <span class="glossary-symbol">tanh</span>
+                        <span class="glossary-desc"><strong>Hyperbolic Tangent</strong>: Calculates hyperbolic ratio sinh(x) / cosh(x).</span>
+                    </div>
+
+                    <!-- Logs -->
+                    <div class="glossary-card" id="gloss-ln">
+                        <span class="glossary-symbol">ln</span>
+                        <span class="glossary-desc"><strong>Natural Logarithm</strong>: Logarithm base e. Solves e<sup>y</sup> = x.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-log">
+                        <span class="glossary-symbol">log</span>
+                        <span class="glossary-desc"><strong>Common Logarithm</strong>: Logarithm base 10. Solves 10<sup>y</sup> = x.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-log2">
+                        <span class="glossary-symbol">log₂</span>
+                        <span class="glossary-desc"><strong>Binary Logarithm</strong>: Logarithm base 2. Solves 2<sup>y</sup> = x.</span>
+                    </div>
+
+                    <!-- Powers -->
+                    <div class="glossary-card" id="gloss-square">
+                        <span class="glossary-symbol">x² / x³</span>
+                        <span class="glossary-desc"><strong>Power of 2 / 3</strong>: Multiplies a value by itself twice or three times.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-power">
+                        <span class="glossary-symbol">xʸ / ʸ√x</span>
+                        <span class="glossary-desc"><strong>Custom Exponent / Root</strong>: Raises base x to power y, or y-th root.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-sqrt">
+                        <span class="glossary-symbol">√ / ∛</span>
+                        <span class="glossary-desc"><strong>Square / Cube Root</strong>: Finds value that squared or cubed equals x.</span>
+                    </div>
+
+                    <!-- Multipliers -->
+                    <div class="glossary-card" id="gloss-exp">
+                        <span class="glossary-symbol">EXP</span>
+                        <span class="glossary-desc"><strong>Scientific Notation</strong>: Appends *10^ to enter values in engineering format.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-pow10">
+                        <span class="glossary-symbol">10ˣ / eˣ</span>
+                        <span class="glossary-desc"><strong>Exponentials</strong>: Raises constant 10 or Euler's number e to power x.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-inv">
+                        <span class="glossary-symbol">1/x</span>
+                        <span class="glossary-desc"><strong>Reciprocal</strong>: Divides 1 by current number (x ➔ x<sup>−1</sup>).</span>
+                    </div>
+
+                    <!-- Constants -->
+                    <div class="glossary-card" id="gloss-pi">
+                        <span class="glossary-symbol">π</span>
+                        <span class="glossary-desc"><strong>Pi (~3.14159)</strong>: Fundamental circle circumference constant.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-e">
+                        <span class="glossary-symbol">e</span>
+                        <span class="glossary-desc"><strong>Euler's Constant (~2.71828)</strong>: Growth factor exponential base.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-phi">
+                        <span class="glossary-symbol">φ</span>
+                        <span class="glossary-desc"><strong>Golden Ratio (~1.61803)</strong>: Geometric proportional constant.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-complex">
+                        <span class="glossary-symbol">i</span>
+                        <span class="glossary-desc"><strong>Imaginary Unit</strong>: Square root of negative number unit (i² = -1).</span>
+                    </div>
+
+                    <!-- Special operators -->
+                    <div class="glossary-card" id="gloss-factorial">
+                        <span class="glossary-symbol">x!</span>
+                        <span class="glossary-desc"><strong>Factorial</strong>: Multiplies integer by every positive integer below it.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-ncr">
+                        <span class="glossary-symbol">nCr</span>
+                        <span class="glossary-desc"><strong>Combinations</strong>: Selections of size r from population n where order is ignored.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-npr">
+                        <span class="glossary-symbol">nPr</span>
+                        <span class="glossary-desc"><strong>Permutations</strong>: Selections of size r from population n where order matters.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-percent">
+                        <span class="glossary-symbol">%</span>
+                        <span class="glossary-desc"><strong>Percentage</strong>: Divides value by 100 to make percentage calculations.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-mod">
+                        <span class="glossary-symbol">mod</span>
+                        <span class="glossary-desc"><strong>Modulo Remainder</strong>: Divides values and returns remainder of integer division.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-abs">
+                        <span class="glossary-symbol">abs / sign</span>
+                        <span class="glossary-desc"><strong>Absolute Value</strong>: strips signs. sign() yields −1, 0, or 1.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-rand">
+                        <span class="glossary-symbol">RAND / RndInt</span>
+                        <span class="glossary-desc"><strong>Randomizer</strong>: Creates random decimal [0,1) or integer between bounds.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-round">
+                        <span class="glossary-symbol">round</span>
+                        <span class="glossary-desc"><strong>Rounding</strong>: Rounds floating values to the nearest integer.</span>
+                    </div>
+                    
+                    <!-- Advanced Real-World Ops -->
+                    <div class="glossary-card" id="gloss-gcd">
+                        <span class="glossary-symbol">gcd(x, y)</span>
+                        <span class="glossary-desc"><strong>Greatest Common Divisor</strong>: Finds the largest integer that divides both input integers.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-lcm">
+                        <span class="glossary-symbol">lcm(x, y)</span>
+                        <span class="glossary-desc"><strong>Least Common Multiple</strong>: Computes smallest positive integer divisible by inputs.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-isprime">
+                        <span class="glossary-symbol">isPrime(x)</span>
+                        <span class="glossary-desc"><strong>Primality Check</strong>: Returns true if integer has no factors but 1 and itself.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-mean">
+                        <span class="glossary-symbol">mean(a,b,...)</span>
+                        <span class="glossary-desc"><strong>Mean Average</strong>: Calculates total sum of inputs divided by argument count.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-std">
+                        <span class="glossary-symbol">std(a,b,...)</span>
+                        <span class="glossary-desc"><strong>Standard Deviation</strong>: Calculates sample standard deviation dispersion index.</span>
+                    </div>
+                    <div class="glossary-card" id="gloss-logxb">
+                        <span class="glossary-symbol">log(x, b)</span>
+                        <span class="glossary-desc"><strong>Custom Log Base</strong>: Evaluates logarithm of value x with respect to custom base b.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIAL OPERATIONS PAD (At the bottom of the calculator) -->
+        <section class="calc-special-pad">
+            <div class="special-pad-header">
+                <span class="pad-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Special Operations & Constants</span>
+            </div>
+            <div class="btn-grid special-grid">
+                <!-- Constants -->
+                <button class="btn btn-sci btn-const" id="btnPi" data-val="pi" data-alt="tau" data-glossary="pi">π</button>
+                <button class="btn btn-sci btn-const" id="btnE" data-val="e" data-alt="phi" data-glossary="e">e</button>
+                <button class="btn btn-sci btn-const" id="btnPhi" data-val="phi" data-alt="i" data-glossary="phi">φ</button>
+                <button class="btn btn-sci btn-const" id="btnImaginary" data-val="i" data-alt="phi" data-glossary="complex">i</button>
+                
+                <!-- Combinatorics & Formulas -->
+                <button class="btn btn-sci" id="btnFactorial" data-val="!" data-alt="gamma(" data-glossary="factorial">x!</button>
+                <button class="btn btn-sci" id="btnNcr" data-val="combinations(" data-alt="permutations(" data-glossary="ncr">nCr</button>
+                <button class="btn btn-sci" id="btnNpr" data-val="permutations(" data-alt="combinations(" data-glossary="npr">nPr</button>
+                <button class="btn btn-sci" id="btnPercent" data-val="%" data-alt="*0.01" data-glossary="percent">%</button>
+                
+                <!-- Advanced Utilities -->
+                <button class="btn btn-sci" id="btnMod" data-val=" mod " data-alt="%" data-glossary="mod">mod</button>
+                <button class="btn btn-sci" id="btnAbs" data-val="abs(" data-alt="sign(" data-glossary="abs">abs</button>
+                <button class="btn btn-sci" id="btnRand" data-val="random()" data-alt="randomInt(1,100)" data-glossary="rand">RAND</button>
+                <button class="btn btn-sci" id="btnRound" data-val="round(" data-alt="round(" data-glossary="round">round</button>
+                
+                <!-- Real-World Scientific Calculations (New Row in grid automatically wraps) -->
+                <button class="btn btn-sci" id="btnGcd" data-val="gcd(" data-alt="lcm(" data-glossary="gcd">gcd</button>
+                <button class="btn btn-sci" id="btnLcm" data-val="lcm(" data-alt="gcd(" data-glossary="lcm">lcm</button>
+                <button class="btn btn-sci" id="btnIsPrime" data-val="isPrime(" data-alt="isPrime(" data-glossary="isprime">isPrime</button>
+                <button class="btn btn-sci" id="btnMean" data-val="mean(" data-alt="median(" data-glossary="mean">mean</button>
+                <button class="btn btn-sci" id="btnStd" data-val="std(" data-alt="var(" data-glossary="std">std</button>
+                <button class="btn btn-sci" id="btnLogxb" data-val="log(" data-alt="log10(" data-glossary="logxb">log(x,b)</button>
+            </div>
+        </section>
+
+        <!-- SLIDEOUT HISTORY DRAWER (RIGHTMOST) -->
+        <aside class="history-drawer" id="historyDrawer">
+            <div class="history-header">
+                <h3><i class="fa-solid fa-history"></i> Calculation Log</h3>
+                <button class="icon-btn" id="closeHistoryBtn" title="Close history">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- Calculations will be dynamically loaded here -->
+                <div class="empty-history-msg">No calculations yet. Complete some expressions to build your history!</div>
+            </div>
+            <div class="history-footer">
+                <button class="btn btn-danger-outline" id="clearHistoryBtn">
+                    <i class="fa-solid fa-trash-can"></i> Clear History
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- CLIPBOARD TOAST NOTIFICATION -->
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <!-- Script loading -->
+    <script src="script.js"></script>
+</body>
+</html>
